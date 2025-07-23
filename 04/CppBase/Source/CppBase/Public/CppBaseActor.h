@@ -3,65 +3,81 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "Engine/Engine.h"
+#include "GameFramework/Actor.h"
 #include "CppBaseActor.generated.h"
 
 class UStaticMeshComponent;
 
 UENUM(BlueprintType)
-enum class EMovementState : uint8 {
-	Mobility,
-	Static
-};
+enum class EMovementState : uint8 { Mobility, Static };
 
 USTRUCT(BlueprintType)
 struct FTransformStruct {
-	GENERATED_USTRUCT_BODY()
+  GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector CurrentLocation = FVector::ZeroVector;
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  FVector CurrentLocation = FVector::ZeroVector;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FRotator CurrentRotation = FRotator::ZeroRotator;
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  FRotator CurrentRotation = FRotator::ZeroRotator;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector CurrentScale = FVector(1.0f, 1.0f, 1.0f);
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  FVector CurrentScale = FVector(1.0f, 1.0f, 1.0f);
 };
 
 UCLASS()
 class CPPBASE_API ACppBaseActor : public AActor {
-	GENERATED_BODY()
+  GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
-	ACppBaseActor();
+  // Sets default values for this actor's properties
+  ACppBaseActor();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+  // Called when the game starts or when spawned
+  virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintCallable)
-	void ShowInformation();
+  // Задание 1. Расчёт математических операций в С++
+  UFUNCTION(BlueprintCallable)
+  void SinMovement();
 
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* Mesh;
+  UFUNCTION(BlueprintCallable)
+  FVector GetInitialLocation();
 
-	UPROPERTY(VisibleAnywhere)
-	FString PlayerName = "Netologiya";
-	
-	UPROPERTY(EditAnywhere)
-	int EnemyNum = 20;
+  UFUNCTION(BlueprintCallable)
+  void SetInitialLocation(FVector location);
 
-	UPROPERTY(EditDefaultsOnly)
-	float CurrentHealth = 57.54687;
+  UPROPERTY(EditInstanceOnly)
+  float Amplitude = 35.0;
 
-	UPROPERTY(EditInstanceOnly)
-	bool IsAlive = true;
+  UPROPERTY(EditInstanceOnly)
+  float Frequency = 2.0;
+
+  UPROPERTY(VisibleAnywhere)
+  FVector InitialLocation;
+
+  UFUNCTION(BlueprintCallable)
+  void ShowInformation();
+
+  UPROPERTY(VisibleAnywhere)
+  UStaticMeshComponent *Mesh;
+
+  UPROPERTY(VisibleAnywhere)
+  FString PlayerName = "Netologiya";
+
+  UPROPERTY(EditAnywhere)
+  int EnemyNum = 20;
+
+  UPROPERTY(EditDefaultsOnly)
+  float CurrentHealth = 57.54687;
+
+  UPROPERTY(EditInstanceOnly)
+  bool IsAlive = true;
 
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+  // Called every frame
+  virtual void Tick(float DeltaTime) override;
 
 private:
 };
