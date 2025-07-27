@@ -55,8 +55,9 @@ void ALMADefaultCharacter::BeginPlay() {
 }
 
 // Called every frame
-void ALMADefaultCharacter::Tick(float DeltaTime) { Super::Tick(DeltaTime); 
-APlayerController *PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+void ALMADefaultCharacter::Tick(float DeltaTime) {
+  Super::Tick(DeltaTime);
+  APlayerController *PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
   if (PC) {
     FHitResult ResultHit;
     PC->GetHitResultUnderCursor(ECC_GameTraceChannel1, true, ResultHit);
@@ -79,11 +80,22 @@ void ALMADefaultCharacter::SetupPlayerInputComponent(
                                  &ALMADefaultCharacter::MoveForward);
   PlayerInputComponent->BindAxis("MoveRight", this,
                                  &ALMADefaultCharacter::MoveRight);
+
+  PlayerInputComponent->BindAxis("Zoom", this, &ALMADefaultCharacter::Zoom);
 }
 
 void ALMADefaultCharacter::MoveForward(float Value) {
   AddMovementInput(GetActorForwardVector(), Value);
 }
+
 void ALMADefaultCharacter::MoveRight(float Value) {
   AddMovementInput(GetActorRightVector(), Value);
+}
+
+void ALMADefaultCharacter::Zoom(float Value) {
+  if (Value != 0.0f) {
+    ArmLength =
+        FMath::Clamp((ArmLength + (Value * ZoomStep)), ZoomMin, ZoomMax);
+    SpringArmComponent->TargetArmLength = ArmLength;
+  }
 }
